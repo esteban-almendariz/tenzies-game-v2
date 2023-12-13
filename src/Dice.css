@@ -1,0 +1,15 @@
+.die-face {
+    background: white;
+    width: 60px;
+    height: 60px;
+    box-shadow: 4px 4px #233142;
+    text-align: center;
+    margin-top: 1em;
+    border-radius: .25em;
+    cursor: pointer;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}

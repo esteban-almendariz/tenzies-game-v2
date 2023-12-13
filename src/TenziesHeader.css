@@ -1,0 +1,16 @@
+.header {
+    text-align: center;
+}
+
+.title {
+    margin: 0;
+    font-size: 4rem;
+    text-align: center;
+}
+
+.instructions {
+    max-width: 80%;
+    font-size: 1.275rem;
+    font-weight: bold;
+    margin: 20px auto;
+}
