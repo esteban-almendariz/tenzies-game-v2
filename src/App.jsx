@@ -9,16 +9,19 @@ function App() {
 
   const [dice, setDice] = useState(allNewDice())
   const [tenzies, setTenzies] = useState(false)
-  const [score, setScore] = useState(0)
-  const [bestScore, setBestScore] = useState(0)
+  // const [score, setScore] = useState(0)
+  // const [bestScore, setBestScore] = useState(0)
   const [startGame, setStartGame] = useState(false)
   const [player, setPlayer] = useState({
       playerName: '',
       score: 0
   })
-  const [topPlayers, setTopPlayers] = useState(JSON.parse(localStorage.getItem('topPlayers')))
+  const playersFromLocalStorage = JSON.parse(localStorage.getItem('topPlayers'))
+  const [topPlayers, setTopPlayers] = useState(playersFromLocalStorage ? playersFromLocalStorage : 
+    [{playerName: '----', score: 0}])
 
-  console.log(topPlayers)
+
+  console.log('Top-Players',topPlayers)
   console.log('Player',player)
   console.log('Start Game', startGame)
   
@@ -39,7 +42,6 @@ function App() {
         const firstValue = dice[0].value
         const sameValue = dice.every(die => die.value === firstValue)
         let playersArray = JSON.parse(localStorage.getItem('topPlayers'))
-        console.log('Players',topPlayers)
 
         //check highscore present
           // if (highscore.score > 0) {
@@ -48,11 +50,18 @@ function App() {
           if (allDiceHeld && sameValue) {
             setTenzies(true)
 
-            if(topPlayers.length < 6) {
+            if(topPlayers.length < 10) {
+              if (topPlayers[0].score === 0) {topPlayers.shift()}
               topPlayers.push(player)
-              
               localStorage.setItem('topPlayers', JSON.stringify(topPlayers))
+            } else if(topPlayers.length >= 10) {
+              if(topPlayers[9].score > player.score) {
+                topPlayers.pop()
+                topPlayers.push(player)
+                localStorage.setItem('topPlayers', JSON.stringify(topPlayers))
+              } 
             }
+            
 
             // if (bestScore === 0) {
             //   setBestScore(score)
@@ -114,6 +123,7 @@ function App() {
           setScore(0)
           setStartGame(false)
           setPlayer({playerName: '', score: 0})
+          setStartGame(false)
         }
   }
 
@@ -131,24 +141,29 @@ function App() {
   return (
     <div>
         <main>
-          <TenziesHeader 
-            tenzies={tenzies}
-            player={playerInfo}
-            startGame={handleStartGame}
+            <TenziesHeader 
+              tenzies={tenzies}
+              player={playerInfo}
+              startGame={handleStartGame}
+              isStartGame={startGame}
+            />
+            {startGame && 
+                <div className="dice-container">
+                {diceElements}
+                </div>
+            }
+            {startGame &&
+                <Score
+                  score={player.score}
+                  // bestScore={bestScore}
+                  tenzies={tenzies}
+                  rollDie={rollDie}
+                />
+            }
+          </main>
+          <TopScore 
+              topPlayers={topPlayers}
           />
-          <div className="dice-container">
-            {diceElements}
-          </div>
-          <Score
-            score={player.score}
-            bestScore={bestScore}
-            tenzies={tenzies}
-            rollDie={rollDie}
-          />
-      </main>
-      <TopScore 
-          topPlayers={topPlayers}
-      />
     </div>
     
   )
