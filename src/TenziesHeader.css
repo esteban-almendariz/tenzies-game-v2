@@ -14,3 +14,16 @@
     font-weight: bold;
     margin: 20px auto;
 }
+
+.startgame-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.startgame-container input {
+    width: 370px;
+    height: 25px;
+    align-self: center;
+    padding: 5px;
+    margin-bottom: 15px;
+}

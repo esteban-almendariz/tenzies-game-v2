@@ -14,11 +14,13 @@ function App() {
   const [startGame, setStartGame] = useState(false)
   const [player, setPlayer] = useState({
       playerName: '',
-      score: ''
+      score: 0
   })
-  const [topPlayers, setTopPlayers] = useState()
+  const [topPlayers, setTopPlayers] = useState(JSON.parse(localStorage.getItem('topPlayers')))
 
-  console.log(player)
+  console.log(topPlayers)
+  console.log('Player',player)
+  console.log('Start Game', startGame)
   
   const playerInfo = (player) => {
     setPlayer(prevState => ({
@@ -27,34 +29,49 @@ function App() {
     }))
   }
 
+  const handleStartGame = () => {
+    setStartGame(true)
+  }
+
 
     useEffect(() => {
-    const allDiceHeld = dice.every(die => die.isHeld)
-    const firstValue = dice[0].value
-    const sameValue = dice.every(die => die.value === firstValue)
-    let highscore = JSON.parse(localStorage.getItem('bestscore'))
+        const allDiceHeld = dice.every(die => die.isHeld)
+        const firstValue = dice[0].value
+        const sameValue = dice.every(die => die.value === firstValue)
+        let playersArray = JSON.parse(localStorage.getItem('topPlayers'))
+        console.log('Players',topPlayers)
 
-    //check highscore present
-      if (highscore) {
-        setBestScore(highscore)
-      }
-      if (allDiceHeld && sameValue) {
-        setTenzies(true)
-        if (bestScore === 0) {
-          setBestScore(score)
-          console.log(score)
-        }
-        if (score < bestScore) {
-          localStorage.setItem('bestscore', JSON.stringify(score))
-          setBestScore(score)
-          console.log(score, bestScore)
-        } else {
-          localStorage.setItem('bestscore', JSON.stringify(score)
-          )
-        }
-    }
+        //check highscore present
+          // if (highscore.score > 0) {
+          //   setBestScore(highscore.score)
+          // }
+          if (allDiceHeld && sameValue) {
+            setTenzies(true)
 
-  }, [dice])
+            if(topPlayers.length < 6) {
+              topPlayers.push(player)
+              
+              localStorage.setItem('topPlayers', JSON.stringify(topPlayers))
+            }
+
+            // if (bestScore === 0) {
+            //   setBestScore(score)
+            //   console.log(score)
+            // }
+            // if (player.score <= bestScore) {
+              
+            //   topPlayers.push(player)
+            //   localStorage.setItem('topPlayers', JSON.stringify(topPlayers))
+            //   setBestScore(player.score)
+            //   console.log('first if')
+            // } else {
+              
+            //   topPlayers.push(player)
+            //   localStorage.setItem('topPlayers', JSON.stringify(topPlayers))
+            //   console.log('second else')
+            // }
+        }
+      }, [dice])
 
 
 
@@ -86,14 +103,18 @@ function App() {
         id: Math.floor(Math.random() * 9999) + 1
       } :
         die
-    }))
-    setScore(prevState => prevState + 1)
-
-    if (tenzies) {
-      setDice(allNewDice)
-      setTenzies(false)
-      setScore(0)
-    }
+        }))
+        setPlayer(prevState => ({
+          ...prevState,
+          score: prevState.score + 1
+        }))
+        if (tenzies) {
+          setDice(allNewDice)
+          setTenzies(false)
+          setScore(0)
+          setStartGame(false)
+          setPlayer({playerName: '', score: 0})
+        }
   }
 
   function holdDice(id) {
@@ -113,18 +134,21 @@ function App() {
           <TenziesHeader 
             tenzies={tenzies}
             player={playerInfo}
+            startGame={handleStartGame}
           />
           <div className="dice-container">
             {diceElements}
           </div>
           <Score
-            score={score}
+            score={player.score}
             bestScore={bestScore}
             tenzies={tenzies}
             rollDie={rollDie}
           />
       </main>
-      <TopScore />
+      <TopScore 
+          topPlayers={topPlayers}
+      />
     </div>
     
   )

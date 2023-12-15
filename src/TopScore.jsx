@@ -1,7 +1,18 @@
 
 import './TopScore.css'
 
-const TopScore = () => {
+const TopScore = ({topPlayers}) => {
+
+   
+    const sortedPlayers = topPlayers.sort((a,b) => a.score - b.score)
+
+    const listTopPlayers = sortedPlayers.map(player => {
+            return <li>
+                    <span>{player.playerName}</span>
+                    <span>{player.score}</span>
+                </li>
+        })
+    
     return (
         <div className="topscore-container">
             <h1>Section Work in Progress</h1>
@@ -11,46 +22,7 @@ const TopScore = () => {
                 <h2>Score</h2>
             </div>
             <ul className='topscores-list'>
-                <li>
-                    <span>Esteban</span>
-                    <span>10</span>
-                </li>
-                <li>
-                    <span>Esteban</span>
-                    <span>10</span>
-                </li>
-                <li>
-                    <span>Esteban</span>
-                    <span>10</span>
-                </li>
-                <li>
-                    <span>Esteban</span>
-                    <span>10</span>
-                </li>
-                <li>
-                    <span>Esteban</span>
-                    <span>10</span>
-                </li>
-                <li>
-                    <span>Esteban</span>
-                    <span>10</span>
-                </li>
-                <li>
-                    <span>Esteban</span>
-                    <span>10</span>
-                </li>
-                <li>
-                    <span>Esteban</span>
-                    <span>10</span>
-                </li>
-                <li>
-                    <span>Esteban</span>
-                    <span>10</span>
-                </li>
-                <li>
-                    <span>Esteban</span>
-                    <span>10</span>
-                </li>
+                {listTopPlayers}
             </ul>
         </div>
     )
