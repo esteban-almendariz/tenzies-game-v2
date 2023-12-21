@@ -4,6 +4,7 @@ import './TenziesHeader.css'
 function TenziesHeader({tenzies, player, startGame, isStartGame}) {
     
     const [playerName, setPlayerName] = useState('')
+    const [inputError, setInputError] = useState('')
 
     const handleNameChange = (e) => {
         setPlayerName(e.target.value)
@@ -14,7 +15,8 @@ function TenziesHeader({tenzies, player, startGame, isStartGame}) {
         if (playerName.length > 2) {
             player(playerName)
             startGame()
-        }
+            setInputError('')
+        } else{setInputError('Use at least 3 characters')}
     }
 
     console.log(isStartGame)
@@ -31,6 +33,7 @@ function TenziesHeader({tenzies, player, startGame, isStartGame}) {
                                 placeholder='Name'
                                 onChange={handleNameChange}
                             />
+                            <span className='input-error'>{inputError}</span>
                             <button onClick={clickHandleStartGame} className='roll-dice'>Start Game</button>
                         </form>
                     }
